@@ -1,0 +1,1472 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/filter.css">
+<link rel="stylesheet" href="css/nouislider.min.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title>RF Map</title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/tailDT.js"></script>
+<script src="js/nouislider.min.js"></script>
+<script src="js/wNumb.js"></script>
+        <script src="data/gmf_20230826T14_MtAlbert_1.js"></script>
+        <script src="data/gmf_20230812T17_Medowlands_2.js"></script>
+        <script src="data/gmf_20230819T17_Medowlands_3.js"></script>
+        <script src="data/gmf_20230820T13_Medowlands_4.js"></script>
+        <script src="data/gmf_20230903T15_Howick_5.js"></script>
+        <script src="data/gmf_20230814T17_Kohimarama_6.js"></script>
+        <script src="data/gmf_20230821T18_Kohimarama_7.js"></script>
+        <script src="data/gmf_20230904T19_Kohimarama_8.js"></script>
+        <script src="data/gmf_20230918T18_Kohimarama_9.js"></script>
+        <script src="data/gmf_20231009T09_Hobsonvill_10.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+
+            if (e.target.feature.geometry.type === 'LineString') {
+              highlightLayer.setStyle({
+                color: '#ffff00',
+              });
+            } else {
+              highlightLayer.setStyle({
+                fillColor: '#ffff00',
+                fillOpacity: 1
+              });
+            }
+            highlightLayer.openPopup();
+        }
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:12
+        }).fitBounds([[-36.98683347472363,174.60568854679892],[-36.79650765867397,175.01293259828307]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+            map.setMaxBounds(map.getBounds());
+        }
+        map.createPane('pane_OSMStandard_0');
+        map.getPane('pane_OSMStandard_0').style.zIndex = 400;
+        var layer_OSMStandard_0 = L.tileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            pane: 'pane_OSMStandard_0',
+            opacity: 1.0,
+            attribution: '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors, CC-BY-SA</a>',
+            minZoom: 12,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 19
+        });
+        layer_OSMStandard_0;
+        map.addLayer(layer_OSMStandard_0);
+        function pop_gmf_20230826T14_MtAlbert_1(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Power Density (mW/m2)</th>\
+                        <td>' + (feature.properties['PD_mW/m2'] !== null ? autolinker.link(feature.properties['PD_mW/m2'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Source</th>\
+                        <td>' + (feature.properties['Source'] !== null ? autolinker.link(feature.properties['Source'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_gmf_20230826T14_MtAlbert_1_0(feature) {
+            if (feature.properties['PD_mW/m2'] >= 0.001000 && feature.properties['PD_mW/m2'] <= 0.010000 ) {
+                return {
+                pane: 'pane_gmf_20230826T14_MtAlbert_1',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(0,128,0,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 0.010000 && feature.properties['PD_mW/m2'] <= 0.100000 ) {
+                return {
+                pane: 'pane_gmf_20230826T14_MtAlbert_1',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(121,185,1,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 0.100000 && feature.properties['PD_mW/m2'] <= 1.000000 ) {
+                return {
+                pane: 'pane_gmf_20230826T14_MtAlbert_1',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(242,242,1,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 1.000000 && feature.properties['PD_mW/m2'] <= 10.000000 ) {
+                return {
+                pane: 'pane_gmf_20230826T14_MtAlbert_1',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,128,1,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 10.000000 && feature.properties['PD_mW/m2'] <= 100.000000 ) {
+                return {
+                pane: 'pane_gmf_20230826T14_MtAlbert_1',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,1,5,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 100.000000 && feature.properties['PD_mW/m2'] <= 1000.000000 ) {
+                return {
+                pane: 'pane_gmf_20230826T14_MtAlbert_1',
+                radius: 6.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(128,0,255,1.0)',
+                interactive: true,
+            }
+            }
+        }
+        map.createPane('pane_gmf_20230826T14_MtAlbert_1');
+        map.getPane('pane_gmf_20230826T14_MtAlbert_1').style.zIndex = 401;
+        map.getPane('pane_gmf_20230826T14_MtAlbert_1').style['mix-blend-mode'] = 'normal';
+        var layer_gmf_20230826T14_MtAlbert_1 = new L.geoJson(json_gmf_20230826T14_MtAlbert_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_gmf_20230826T14_MtAlbert_1',
+            layerName: 'layer_gmf_20230826T14_MtAlbert_1',
+            pane: 'pane_gmf_20230826T14_MtAlbert_1',
+            onEachFeature: pop_gmf_20230826T14_MtAlbert_1,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_gmf_20230826T14_MtAlbert_1_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_gmf_20230826T14_MtAlbert_1);
+        map.addLayer(layer_gmf_20230826T14_MtAlbert_1);
+        function pop_gmf_20230812T17_Medowlands_2(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Power Density (mW/m2)</th>\
+                        <td>' + (feature.properties['PD_mW/m2'] !== null ? autolinker.link(feature.properties['PD_mW/m2'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Source</th>\
+                        <td>' + (feature.properties['Source'] !== null ? autolinker.link(feature.properties['Source'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_gmf_20230812T17_Medowlands_2_0(feature) {
+            if (feature.properties['PD_mW/m2'] >= 0.001000 && feature.properties['PD_mW/m2'] <= 0.010000 ) {
+                return {
+                pane: 'pane_gmf_20230812T17_Medowlands_2',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(0,128,0,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 0.010000 && feature.properties['PD_mW/m2'] <= 0.100000 ) {
+                return {
+                pane: 'pane_gmf_20230812T17_Medowlands_2',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(121,185,1,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 0.100000 && feature.properties['PD_mW/m2'] <= 1.000000 ) {
+                return {
+                pane: 'pane_gmf_20230812T17_Medowlands_2',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(242,242,1,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 1.000000 && feature.properties['PD_mW/m2'] <= 10.000000 ) {
+                return {
+                pane: 'pane_gmf_20230812T17_Medowlands_2',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,128,1,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 10.000000 && feature.properties['PD_mW/m2'] <= 100.000000 ) {
+                return {
+                pane: 'pane_gmf_20230812T17_Medowlands_2',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,1,5,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 100.000000 && feature.properties['PD_mW/m2'] <= 1000.000000 ) {
+                return {
+                pane: 'pane_gmf_20230812T17_Medowlands_2',
+                radius: 6.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(128,0,255,1.0)',
+                interactive: true,
+            }
+            }
+        }
+        map.createPane('pane_gmf_20230812T17_Medowlands_2');
+        map.getPane('pane_gmf_20230812T17_Medowlands_2').style.zIndex = 402;
+        map.getPane('pane_gmf_20230812T17_Medowlands_2').style['mix-blend-mode'] = 'normal';
+        var layer_gmf_20230812T17_Medowlands_2 = new L.geoJson(json_gmf_20230812T17_Medowlands_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_gmf_20230812T17_Medowlands_2',
+            layerName: 'layer_gmf_20230812T17_Medowlands_2',
+            pane: 'pane_gmf_20230812T17_Medowlands_2',
+            onEachFeature: pop_gmf_20230812T17_Medowlands_2,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_gmf_20230812T17_Medowlands_2_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_gmf_20230812T17_Medowlands_2);
+        map.addLayer(layer_gmf_20230812T17_Medowlands_2);
+        function pop_gmf_20230819T17_Medowlands_3(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Power Density (mW/m2)</th>\
+                        <td>' + (feature.properties['PD_mW/m2'] !== null ? autolinker.link(feature.properties['PD_mW/m2'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Source</th>\
+                        <td>' + (feature.properties['Source'] !== null ? autolinker.link(feature.properties['Source'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_gmf_20230819T17_Medowlands_3_0(feature) {
+            if (feature.properties['PD_mW/m2'] >= 0.001000 && feature.properties['PD_mW/m2'] <= 0.010000 ) {
+                return {
+                pane: 'pane_gmf_20230819T17_Medowlands_3',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(0,128,0,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 0.010000 && feature.properties['PD_mW/m2'] <= 0.100000 ) {
+                return {
+                pane: 'pane_gmf_20230819T17_Medowlands_3',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(121,185,1,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 0.100000 && feature.properties['PD_mW/m2'] <= 1.000000 ) {
+                return {
+                pane: 'pane_gmf_20230819T17_Medowlands_3',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(242,242,1,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 1.000000 && feature.properties['PD_mW/m2'] <= 10.000000 ) {
+                return {
+                pane: 'pane_gmf_20230819T17_Medowlands_3',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,128,1,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 10.000000 && feature.properties['PD_mW/m2'] <= 100.000000 ) {
+                return {
+                pane: 'pane_gmf_20230819T17_Medowlands_3',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,1,5,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 100.000000 && feature.properties['PD_mW/m2'] <= 1000.000000 ) {
+                return {
+                pane: 'pane_gmf_20230819T17_Medowlands_3',
+                radius: 6.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(128,0,255,1.0)',
+                interactive: true,
+            }
+            }
+        }
+        map.createPane('pane_gmf_20230819T17_Medowlands_3');
+        map.getPane('pane_gmf_20230819T17_Medowlands_3').style.zIndex = 403;
+        map.getPane('pane_gmf_20230819T17_Medowlands_3').style['mix-blend-mode'] = 'normal';
+        var layer_gmf_20230819T17_Medowlands_3 = new L.geoJson(json_gmf_20230819T17_Medowlands_3, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_gmf_20230819T17_Medowlands_3',
+            layerName: 'layer_gmf_20230819T17_Medowlands_3',
+            pane: 'pane_gmf_20230819T17_Medowlands_3',
+            onEachFeature: pop_gmf_20230819T17_Medowlands_3,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_gmf_20230819T17_Medowlands_3_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_gmf_20230819T17_Medowlands_3);
+        map.addLayer(layer_gmf_20230819T17_Medowlands_3);
+        function pop_gmf_20230820T13_Medowlands_4(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Power Density (mW/m2)</th>\
+                        <td>' + (feature.properties['PD_mW/m2'] !== null ? autolinker.link(feature.properties['PD_mW/m2'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Source</th>\
+                        <td>' + (feature.properties['Source'] !== null ? autolinker.link(feature.properties['Source'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_gmf_20230820T13_Medowlands_4_0(feature) {
+            if (feature.properties['PD_mW/m2'] >= 0.001000 && feature.properties['PD_mW/m2'] <= 0.010000 ) {
+                return {
+                pane: 'pane_gmf_20230820T13_Medowlands_4',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(0,128,0,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 0.010000 && feature.properties['PD_mW/m2'] <= 0.100000 ) {
+                return {
+                pane: 'pane_gmf_20230820T13_Medowlands_4',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(121,185,1,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 0.100000 && feature.properties['PD_mW/m2'] <= 1.000000 ) {
+                return {
+                pane: 'pane_gmf_20230820T13_Medowlands_4',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(242,242,1,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 1.000000 && feature.properties['PD_mW/m2'] <= 10.000000 ) {
+                return {
+                pane: 'pane_gmf_20230820T13_Medowlands_4',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,128,1,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 10.000000 && feature.properties['PD_mW/m2'] <= 100.000000 ) {
+                return {
+                pane: 'pane_gmf_20230820T13_Medowlands_4',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,1,5,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 100.000000 && feature.properties['PD_mW/m2'] <= 1000.000000 ) {
+                return {
+                pane: 'pane_gmf_20230820T13_Medowlands_4',
+                radius: 6.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(128,0,255,1.0)',
+                interactive: true,
+            }
+            }
+        }
+        map.createPane('pane_gmf_20230820T13_Medowlands_4');
+        map.getPane('pane_gmf_20230820T13_Medowlands_4').style.zIndex = 404;
+        map.getPane('pane_gmf_20230820T13_Medowlands_4').style['mix-blend-mode'] = 'normal';
+        var layer_gmf_20230820T13_Medowlands_4 = new L.geoJson(json_gmf_20230820T13_Medowlands_4, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_gmf_20230820T13_Medowlands_4',
+            layerName: 'layer_gmf_20230820T13_Medowlands_4',
+            pane: 'pane_gmf_20230820T13_Medowlands_4',
+            onEachFeature: pop_gmf_20230820T13_Medowlands_4,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_gmf_20230820T13_Medowlands_4_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_gmf_20230820T13_Medowlands_4);
+        map.addLayer(layer_gmf_20230820T13_Medowlands_4);
+        function pop_gmf_20230903T15_Howick_5(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Power Density (mW/m2)</th>\
+                        <td>' + (feature.properties['PD_mW/m2'] !== null ? autolinker.link(feature.properties['PD_mW/m2'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Source</th>\
+                        <td>' + (feature.properties['Source'] !== null ? autolinker.link(feature.properties['Source'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_gmf_20230903T15_Howick_5_0(feature) {
+            if (feature.properties['PD_mW/m2'] >= 0.001000 && feature.properties['PD_mW/m2'] <= 0.010000 ) {
+                return {
+                pane: 'pane_gmf_20230903T15_Howick_5',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(0,128,0,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 0.010000 && feature.properties['PD_mW/m2'] <= 0.100000 ) {
+                return {
+                pane: 'pane_gmf_20230903T15_Howick_5',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(121,185,1,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 0.100000 && feature.properties['PD_mW/m2'] <= 1.000000 ) {
+                return {
+                pane: 'pane_gmf_20230903T15_Howick_5',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(242,242,1,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 1.000000 && feature.properties['PD_mW/m2'] <= 10.000000 ) {
+                return {
+                pane: 'pane_gmf_20230903T15_Howick_5',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,128,1,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 10.000000 && feature.properties['PD_mW/m2'] <= 100.000000 ) {
+                return {
+                pane: 'pane_gmf_20230903T15_Howick_5',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,1,5,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 100.000000 && feature.properties['PD_mW/m2'] <= 1000.000000 ) {
+                return {
+                pane: 'pane_gmf_20230903T15_Howick_5',
+                radius: 6.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(128,0,255,1.0)',
+                interactive: true,
+            }
+            }
+        }
+        map.createPane('pane_gmf_20230903T15_Howick_5');
+        map.getPane('pane_gmf_20230903T15_Howick_5').style.zIndex = 405;
+        map.getPane('pane_gmf_20230903T15_Howick_5').style['mix-blend-mode'] = 'normal';
+        var layer_gmf_20230903T15_Howick_5 = new L.geoJson(json_gmf_20230903T15_Howick_5, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_gmf_20230903T15_Howick_5',
+            layerName: 'layer_gmf_20230903T15_Howick_5',
+            pane: 'pane_gmf_20230903T15_Howick_5',
+            onEachFeature: pop_gmf_20230903T15_Howick_5,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_gmf_20230903T15_Howick_5_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_gmf_20230903T15_Howick_5);
+        map.addLayer(layer_gmf_20230903T15_Howick_5);
+        function pop_gmf_20230814T17_Kohimarama_6(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Power Density (mW/m2)</th>\
+                        <td>' + (feature.properties['PD_mW/m2'] !== null ? autolinker.link(feature.properties['PD_mW/m2'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Source</th>\
+                        <td>' + (feature.properties['Source'] !== null ? autolinker.link(feature.properties['Source'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_gmf_20230814T17_Kohimarama_6_0(feature) {
+            if (feature.properties['PD_mW/m2'] >= 0.001000 && feature.properties['PD_mW/m2'] <= 0.010000 ) {
+                return {
+                pane: 'pane_gmf_20230814T17_Kohimarama_6',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(0,128,0,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 0.010000 && feature.properties['PD_mW/m2'] <= 0.100000 ) {
+                return {
+                pane: 'pane_gmf_20230814T17_Kohimarama_6',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(121,185,1,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 0.100000 && feature.properties['PD_mW/m2'] <= 1.000000 ) {
+                return {
+                pane: 'pane_gmf_20230814T17_Kohimarama_6',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(242,242,1,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 1.000000 && feature.properties['PD_mW/m2'] <= 10.000000 ) {
+                return {
+                pane: 'pane_gmf_20230814T17_Kohimarama_6',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,128,1,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 10.000000 && feature.properties['PD_mW/m2'] <= 100.000000 ) {
+                return {
+                pane: 'pane_gmf_20230814T17_Kohimarama_6',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,1,5,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 100.000000 && feature.properties['PD_mW/m2'] <= 1000.000000 ) {
+                return {
+                pane: 'pane_gmf_20230814T17_Kohimarama_6',
+                radius: 6.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(128,0,255,1.0)',
+                interactive: true,
+            }
+            }
+        }
+        map.createPane('pane_gmf_20230814T17_Kohimarama_6');
+        map.getPane('pane_gmf_20230814T17_Kohimarama_6').style.zIndex = 406;
+        map.getPane('pane_gmf_20230814T17_Kohimarama_6').style['mix-blend-mode'] = 'normal';
+        var layer_gmf_20230814T17_Kohimarama_6 = new L.geoJson(json_gmf_20230814T17_Kohimarama_6, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_gmf_20230814T17_Kohimarama_6',
+            layerName: 'layer_gmf_20230814T17_Kohimarama_6',
+            pane: 'pane_gmf_20230814T17_Kohimarama_6',
+            onEachFeature: pop_gmf_20230814T17_Kohimarama_6,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_gmf_20230814T17_Kohimarama_6_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_gmf_20230814T17_Kohimarama_6);
+        map.addLayer(layer_gmf_20230814T17_Kohimarama_6);
+        function pop_gmf_20230821T18_Kohimarama_7(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Power Density (mW/m2)</th>\
+                        <td>' + (feature.properties['PD_mW/m2'] !== null ? autolinker.link(feature.properties['PD_mW/m2'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Source</th>\
+                        <td>' + (feature.properties['Source'] !== null ? autolinker.link(feature.properties['Source'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_gmf_20230821T18_Kohimarama_7_0(feature) {
+            if (feature.properties['PD_mW/m2'] >= 0.001000 && feature.properties['PD_mW/m2'] <= 0.010000 ) {
+                return {
+                pane: 'pane_gmf_20230821T18_Kohimarama_7',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(0,128,0,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 0.010000 && feature.properties['PD_mW/m2'] <= 0.100000 ) {
+                return {
+                pane: 'pane_gmf_20230821T18_Kohimarama_7',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(121,185,1,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 0.100000 && feature.properties['PD_mW/m2'] <= 1.000000 ) {
+                return {
+                pane: 'pane_gmf_20230821T18_Kohimarama_7',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(242,242,1,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 1.000000 && feature.properties['PD_mW/m2'] <= 10.000000 ) {
+                return {
+                pane: 'pane_gmf_20230821T18_Kohimarama_7',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,128,1,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 10.000000 && feature.properties['PD_mW/m2'] <= 100.000000 ) {
+                return {
+                pane: 'pane_gmf_20230821T18_Kohimarama_7',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,1,5,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 100.000000 && feature.properties['PD_mW/m2'] <= 1000.000000 ) {
+                return {
+                pane: 'pane_gmf_20230821T18_Kohimarama_7',
+                radius: 6.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(128,0,255,1.0)',
+                interactive: true,
+            }
+            }
+        }
+        map.createPane('pane_gmf_20230821T18_Kohimarama_7');
+        map.getPane('pane_gmf_20230821T18_Kohimarama_7').style.zIndex = 407;
+        map.getPane('pane_gmf_20230821T18_Kohimarama_7').style['mix-blend-mode'] = 'normal';
+        var layer_gmf_20230821T18_Kohimarama_7 = new L.geoJson(json_gmf_20230821T18_Kohimarama_7, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_gmf_20230821T18_Kohimarama_7',
+            layerName: 'layer_gmf_20230821T18_Kohimarama_7',
+            pane: 'pane_gmf_20230821T18_Kohimarama_7',
+            onEachFeature: pop_gmf_20230821T18_Kohimarama_7,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_gmf_20230821T18_Kohimarama_7_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_gmf_20230821T18_Kohimarama_7);
+        map.addLayer(layer_gmf_20230821T18_Kohimarama_7);
+        function pop_gmf_20230904T19_Kohimarama_8(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Power Density (mW/m2)</th>\
+                        <td>' + (feature.properties['PD_mW/m2'] !== null ? autolinker.link(feature.properties['PD_mW/m2'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Source</th>\
+                        <td>' + (feature.properties['Source'] !== null ? autolinker.link(feature.properties['Source'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_gmf_20230904T19_Kohimarama_8_0(feature) {
+            if (feature.properties['PD_mW/m2'] >= 0.001000 && feature.properties['PD_mW/m2'] <= 0.010000 ) {
+                return {
+                pane: 'pane_gmf_20230904T19_Kohimarama_8',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(0,128,0,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 0.010000 && feature.properties['PD_mW/m2'] <= 0.100000 ) {
+                return {
+                pane: 'pane_gmf_20230904T19_Kohimarama_8',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(121,185,1,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 0.100000 && feature.properties['PD_mW/m2'] <= 1.000000 ) {
+                return {
+                pane: 'pane_gmf_20230904T19_Kohimarama_8',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(242,242,1,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 1.000000 && feature.properties['PD_mW/m2'] <= 10.000000 ) {
+                return {
+                pane: 'pane_gmf_20230904T19_Kohimarama_8',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,128,1,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 10.000000 && feature.properties['PD_mW/m2'] <= 100.000000 ) {
+                return {
+                pane: 'pane_gmf_20230904T19_Kohimarama_8',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,1,5,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 100.000000 && feature.properties['PD_mW/m2'] <= 1000.000000 ) {
+                return {
+                pane: 'pane_gmf_20230904T19_Kohimarama_8',
+                radius: 6.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(128,0,255,1.0)',
+                interactive: true,
+            }
+            }
+        }
+        map.createPane('pane_gmf_20230904T19_Kohimarama_8');
+        map.getPane('pane_gmf_20230904T19_Kohimarama_8').style.zIndex = 408;
+        map.getPane('pane_gmf_20230904T19_Kohimarama_8').style['mix-blend-mode'] = 'normal';
+        var layer_gmf_20230904T19_Kohimarama_8 = new L.geoJson(json_gmf_20230904T19_Kohimarama_8, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_gmf_20230904T19_Kohimarama_8',
+            layerName: 'layer_gmf_20230904T19_Kohimarama_8',
+            pane: 'pane_gmf_20230904T19_Kohimarama_8',
+            onEachFeature: pop_gmf_20230904T19_Kohimarama_8,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_gmf_20230904T19_Kohimarama_8_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_gmf_20230904T19_Kohimarama_8);
+        map.addLayer(layer_gmf_20230904T19_Kohimarama_8);
+        function pop_gmf_20230918T18_Kohimarama_9(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Power Density (mW/m2)</th>\
+                        <td>' + (feature.properties['PD_mW/m2'] !== null ? autolinker.link(feature.properties['PD_mW/m2'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Source</th>\
+                        <td>' + (feature.properties['Source'] !== null ? autolinker.link(feature.properties['Source'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_gmf_20230918T18_Kohimarama_9_0(feature) {
+            if (feature.properties['PD_mW/m2'] >= 0.001000 && feature.properties['PD_mW/m2'] <= 0.010000 ) {
+                return {
+                pane: 'pane_gmf_20230918T18_Kohimarama_9',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(0,128,0,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 0.010000 && feature.properties['PD_mW/m2'] <= 0.100000 ) {
+                return {
+                pane: 'pane_gmf_20230918T18_Kohimarama_9',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(121,185,1,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 0.100000 && feature.properties['PD_mW/m2'] <= 1.000000 ) {
+                return {
+                pane: 'pane_gmf_20230918T18_Kohimarama_9',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(242,242,1,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 1.000000 && feature.properties['PD_mW/m2'] <= 10.000000 ) {
+                return {
+                pane: 'pane_gmf_20230918T18_Kohimarama_9',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,128,1,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 10.000000 && feature.properties['PD_mW/m2'] <= 100.000000 ) {
+                return {
+                pane: 'pane_gmf_20230918T18_Kohimarama_9',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,1,5,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 100.000000 && feature.properties['PD_mW/m2'] <= 1000.000000 ) {
+                return {
+                pane: 'pane_gmf_20230918T18_Kohimarama_9',
+                radius: 6.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(128,0,255,1.0)',
+                interactive: true,
+            }
+            }
+        }
+        map.createPane('pane_gmf_20230918T18_Kohimarama_9');
+        map.getPane('pane_gmf_20230918T18_Kohimarama_9').style.zIndex = 409;
+        map.getPane('pane_gmf_20230918T18_Kohimarama_9').style['mix-blend-mode'] = 'normal';
+        var layer_gmf_20230918T18_Kohimarama_9 = new L.geoJson(json_gmf_20230918T18_Kohimarama_9, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_gmf_20230918T18_Kohimarama_9',
+            layerName: 'layer_gmf_20230918T18_Kohimarama_9',
+            pane: 'pane_gmf_20230918T18_Kohimarama_9',
+            onEachFeature: pop_gmf_20230918T18_Kohimarama_9,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_gmf_20230918T18_Kohimarama_9_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_gmf_20230918T18_Kohimarama_9);
+        map.addLayer(layer_gmf_20230918T18_Kohimarama_9);
+        function pop_gmf_20231009T09_Hobsonvill_10(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Power Density (mW/m2)</th>\
+                        <td>' + (feature.properties['PD_mW/m2'] !== null ? autolinker.link(feature.properties['PD_mW/m2'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Source</th>\
+                        <td>' + (feature.properties['Source'] !== null ? autolinker.link(feature.properties['Source'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_gmf_20231009T09_Hobsonvill_10_0(feature) {
+            if (feature.properties['PD_mW/m2'] >= 0.001000 && feature.properties['PD_mW/m2'] <= 0.010000 ) {
+                return {
+                pane: 'pane_gmf_20231009T09_Hobsonvill_10',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(0,128,0,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 0.010000 && feature.properties['PD_mW/m2'] <= 0.100000 ) {
+                return {
+                pane: 'pane_gmf_20231009T09_Hobsonvill_10',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(121,185,1,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 0.100000 && feature.properties['PD_mW/m2'] <= 1.000000 ) {
+                return {
+                pane: 'pane_gmf_20231009T09_Hobsonvill_10',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(242,242,1,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 1.000000 && feature.properties['PD_mW/m2'] <= 10.000000 ) {
+                return {
+                pane: 'pane_gmf_20231009T09_Hobsonvill_10',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,128,1,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 10.000000 && feature.properties['PD_mW/m2'] <= 100.000000 ) {
+                return {
+                pane: 'pane_gmf_20231009T09_Hobsonvill_10',
+                radius: 4.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,1,5,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['PD_mW/m2'] >= 100.000000 && feature.properties['PD_mW/m2'] <= 1000.000000 ) {
+                return {
+                pane: 'pane_gmf_20231009T09_Hobsonvill_10',
+                radius: 6.0,
+                stroke: false,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(128,0,255,1.0)',
+                interactive: true,
+            }
+            }
+        }
+        map.createPane('pane_gmf_20231009T09_Hobsonvill_10');
+        map.getPane('pane_gmf_20231009T09_Hobsonvill_10').style.zIndex = 410;
+        map.getPane('pane_gmf_20231009T09_Hobsonvill_10').style['mix-blend-mode'] = 'normal';
+        var layer_gmf_20231009T09_Hobsonvill_10 = new L.geoJson(json_gmf_20231009T09_Hobsonvill_10, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_gmf_20231009T09_Hobsonvill_10',
+            layerName: 'layer_gmf_20231009T09_Hobsonvill_10',
+            pane: 'pane_gmf_20231009T09_Hobsonvill_10',
+            onEachFeature: pop_gmf_20231009T09_Hobsonvill_10,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_gmf_20231009T09_Hobsonvill_10_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_gmf_20231009T09_Hobsonvill_10);
+        map.addLayer(layer_gmf_20231009T09_Hobsonvill_10);
+            var title = new L.Control();
+            title.onAdd = function (map) {
+                this._div = L.DomUtil.create('div', 'info');
+                this.update();
+                return this._div;
+            };
+            title.update = function () {
+                this._div.innerHTML = '<h2>RF Map</h2>';
+            };
+            title.addTo(map);
+            var abstract = new L.Control({'position':'topright'});
+            abstract.onAdd = function (map) {
+                this._div = L.DomUtil.create('div',
+                'leaflet-control abstract');
+                this._div.id = 'abstract'
+                    this._div.setAttribute("onmouseenter", "abstract.show()");
+                    this._div.setAttribute("onmouseleave", "abstract.hide()");
+                    this.hide();
+                    return this._div;
+                };
+                abstract.hide = function () {
+                    this._div.classList.remove("abstractUncollapsed");
+                    this._div.classList.add("abstract");
+                    this._div.innerHTML = 'i'
+                }
+                abstract.show = function () {
+                    this._div.classList.remove("abstract");
+                    this._div.classList.add("abstractUncollapsed");
+                    this._div.innerHTML = 'Some typical electro-magnetic radiation (EMR) measurements around Auckland. The measurements were taken with an emf-390 meter. The power density units are milli-watts per meter squared (mW/m2). The GPS coordanates were logged using an android phone. The GPS and EMR were combined by the timestamp to give a geospatial representation.<br /><br />Each dot represents a data point and is colour coded to indicate the magnitude. You can hover over each data point to see the measured value. You can select which recordings to view by clicking on the checkboxes in the legend. You can filter the data by the power density with the slider in the top right. The emf-390 also records the source of the radiation (only a crude estimation). You can filter the data by the source (hold down CTRL and Click to select several sources). Click \'clear filter\' below each filter to reset.';
+            };
+            abstract.addTo(map);
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'gmf_20231009T09_Hobsonvill<br /><table><tr><td style="text-align: center;"><img src="legend/gmf_20231009T09_Hobsonvill_10_00010010.png" /></td><td>0.001 - 0.01</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20231009T09_Hobsonvill_10_001011.png" /></td><td>0.01 - 0.1</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20231009T09_Hobsonvill_10_0112.png" /></td><td>0.1 - 1</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20231009T09_Hobsonvill_10_1103.png" /></td><td>1 - 10</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20231009T09_Hobsonvill_10_101004.png" /></td><td>10 - 100</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20231009T09_Hobsonvill_10_10010005.png" /></td><td>100 - 1000</td></tr></table>': layer_gmf_20231009T09_Hobsonvill_10,'gmf_20230918T18_Kohimarama<br /><table><tr><td style="text-align: center;"><img src="legend/gmf_20230918T18_Kohimarama_9_00010010.png" /></td><td>0.001 - 0.01</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230918T18_Kohimarama_9_001011.png" /></td><td>0.01 - 0.1</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230918T18_Kohimarama_9_0112.png" /></td><td>0.1 - 1</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230918T18_Kohimarama_9_1103.png" /></td><td>1 - 10</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230918T18_Kohimarama_9_101004.png" /></td><td>10 - 100</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230918T18_Kohimarama_9_10010005.png" /></td><td>100 - 1000</td></tr></table>': layer_gmf_20230918T18_Kohimarama_9,'gmf_20230904T19_Kohimarama<br /><table><tr><td style="text-align: center;"><img src="legend/gmf_20230904T19_Kohimarama_8_00010010.png" /></td><td>0.001 - 0.01</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230904T19_Kohimarama_8_001011.png" /></td><td>0.01 - 0.1</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230904T19_Kohimarama_8_0112.png" /></td><td>0.1 - 1</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230904T19_Kohimarama_8_1103.png" /></td><td>1 - 10</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230904T19_Kohimarama_8_101004.png" /></td><td>10 - 100</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230904T19_Kohimarama_8_10010005.png" /></td><td>100 - 1000</td></tr></table>': layer_gmf_20230904T19_Kohimarama_8,'gmf_20230821T18_Kohimarama<br /><table><tr><td style="text-align: center;"><img src="legend/gmf_20230821T18_Kohimarama_7_00010010.png" /></td><td>0.001 - 0.01</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230821T18_Kohimarama_7_001011.png" /></td><td>0.01 - 0.1</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230821T18_Kohimarama_7_0112.png" /></td><td>0.1 - 1</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230821T18_Kohimarama_7_1103.png" /></td><td>1 - 10</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230821T18_Kohimarama_7_101004.png" /></td><td>10 - 100</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230821T18_Kohimarama_7_10010005.png" /></td><td>100 - 1000</td></tr></table>': layer_gmf_20230821T18_Kohimarama_7,'gmf_20230814T17_Kohimarama<br /><table><tr><td style="text-align: center;"><img src="legend/gmf_20230814T17_Kohimarama_6_00010010.png" /></td><td>0.001 - 0.01</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230814T17_Kohimarama_6_001011.png" /></td><td>0.01 - 0.1</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230814T17_Kohimarama_6_0112.png" /></td><td>0.1 - 1</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230814T17_Kohimarama_6_1103.png" /></td><td>1 - 10</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230814T17_Kohimarama_6_101004.png" /></td><td>10 - 100</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230814T17_Kohimarama_6_10010005.png" /></td><td>100 - 1000</td></tr></table>': layer_gmf_20230814T17_Kohimarama_6,'gmf_20230903T15_Howick<br /><table><tr><td style="text-align: center;"><img src="legend/gmf_20230903T15_Howick_5_00010010.png" /></td><td>0.001 - 0.01</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230903T15_Howick_5_001011.png" /></td><td>0.01 - 0.1</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230903T15_Howick_5_0112.png" /></td><td>0.1 - 1</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230903T15_Howick_5_1103.png" /></td><td>1 - 10</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230903T15_Howick_5_101004.png" /></td><td>10 - 100</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230903T15_Howick_5_10010005.png" /></td><td>100 - 1000</td></tr></table>': layer_gmf_20230903T15_Howick_5,'gmf_20230820T13_Medowlands<br /><table><tr><td style="text-align: center;"><img src="legend/gmf_20230820T13_Medowlands_4_00010010.png" /></td><td>0.001 - 0.01</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230820T13_Medowlands_4_001011.png" /></td><td>0.01 - 0.1</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230820T13_Medowlands_4_0112.png" /></td><td>0.1 - 1</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230820T13_Medowlands_4_1103.png" /></td><td>1 - 10</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230820T13_Medowlands_4_101004.png" /></td><td>10 - 100</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230820T13_Medowlands_4_10010005.png" /></td><td>100 - 1000</td></tr></table>': layer_gmf_20230820T13_Medowlands_4,'gmf_20230819T17_Medowlands<br /><table><tr><td style="text-align: center;"><img src="legend/gmf_20230819T17_Medowlands_3_00010010.png" /></td><td>0.001 - 0.01</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230819T17_Medowlands_3_001011.png" /></td><td>0.01 - 0.1</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230819T17_Medowlands_3_0112.png" /></td><td>0.1 - 1</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230819T17_Medowlands_3_1103.png" /></td><td>1 - 10</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230819T17_Medowlands_3_101004.png" /></td><td>10 - 100</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230819T17_Medowlands_3_10010005.png" /></td><td>100 - 1000</td></tr></table>': layer_gmf_20230819T17_Medowlands_3,'gmf_20230812T17_Medowlands<br /><table><tr><td style="text-align: center;"><img src="legend/gmf_20230812T17_Medowlands_2_00010010.png" /></td><td>0.001 - 0.01</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230812T17_Medowlands_2_001011.png" /></td><td>0.01 - 0.1</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230812T17_Medowlands_2_0112.png" /></td><td>0.1 - 1</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230812T17_Medowlands_2_1103.png" /></td><td>1 - 10</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230812T17_Medowlands_2_101004.png" /></td><td>10 - 100</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230812T17_Medowlands_2_10010005.png" /></td><td>100 - 1000</td></tr></table>': layer_gmf_20230812T17_Medowlands_2,'gmf_20230826T14_MtAlbert<br /><table><tr><td style="text-align: center;"><img src="legend/gmf_20230826T14_MtAlbert_1_00010010.png" /></td><td>0.001 - 0.01</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230826T14_MtAlbert_1_001011.png" /></td><td>0.01 - 0.1</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230826T14_MtAlbert_1_0112.png" /></td><td>0.1 - 1</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230826T14_MtAlbert_1_1103.png" /></td><td>1 - 10</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230826T14_MtAlbert_1_101004.png" /></td><td>10 - 100</td></tr><tr><td style="text-align: center;"><img src="legend/gmf_20230826T14_MtAlbert_1_10010005.png" /></td><td>100 - 1000</td></tr></table>': layer_gmf_20230826T14_MtAlbert_1,"OSM Standard": layer_OSMStandard_0,},{collapsed:false}).addTo(map);L.control.scale({position: 'bottomleft', maxWidth: 100, metric: true, imperial: false, updateWhenIdle: false}).addTo(map);
+        setBounds();
+        var mapDiv = document.getElementById('map');
+        var row = document.createElement('div');
+        row.className="row";
+        row.id="all";
+        row.style.height = "100%";
+        var col1 = document.createElement('div');
+        col1.className="col9";
+        col1.id = "mapWindow";
+        col1.style.height = "99%";
+        col1.style.width = "80%";
+        col1.style.display = "inline-block";
+        var col2 = document.createElement('div');
+        col2.className="col3";
+        col2.id = "menu";
+        col2.style.display = "inline-block";
+        mapDiv.parentNode.insertBefore(row, mapDiv);
+        document.getElementById("all").appendChild(col1);
+        document.getElementById("all").appendChild(col2);
+        col1.appendChild(mapDiv)
+        var Filters = {"PD_mW/m2": "real","Source": "str"};
+        function filterFunc() {
+          map.eachLayer(function(lyr){
+          if ("options" in lyr && "dataVar" in lyr["options"]){
+            features = this[lyr["options"]["dataVar"]].features.slice(0);
+            try{
+              for (key in Filters){
+                keyS = key.replace(/[^a-zA-Z0-9_]/g, "")
+                if (Filters[key] == "str" || Filters[key] == "bool"){
+                  var selection = [];
+                  var options = document.getElementById("sel_" + keyS).options
+                  for (var i=0; i < options.length; i++) {
+                    if (options[i].selected) selection.push(options[i].value);
+                  }
+                    try{
+                      if (key in features[0].properties){
+                        for (i = features.length - 1;
+                          i >= 0; --i){
+                          if (selection.indexOf(
+                          features[i].properties[key])<0
+                          && selection.length>0) {
+                          features.splice(i,1);
+                          }
+                        }
+                      }
+                    } catch(err){
+                  }
+                }
+                if (Filters[key] == "int"){
+                  sliderVals =  document.getElementById(
+                    "div_" + keyS).noUiSlider.get();
+                  try{
+                    if (key in features[0].properties){
+                    for (i = features.length - 1; i >= 0; --i){
+                      if (parseInt(features[i].properties[key])
+                          < sliderVals[0]
+                          || parseInt(features[i].properties[key])
+                          > sliderVals[1]){
+                            features.splice(i,1);
+                          }
+                        }
+                      }
+                    } catch(err){
+                    }
+                  }
+                if (Filters[key] == "real"){
+                  sliderVals =  document.getElementById(
+                    "div_" + keyS).noUiSlider.get();
+                  try{
+                    if (key in features[0].properties){
+                    for (i = features.length - 1; i >= 0; --i){
+                      if (features[i].properties[key]
+                          < sliderVals[0]
+                          || features[i].properties[key]
+                          > sliderVals[1]){
+                            features.splice(i,1);
+                          }
+                        }
+                      }
+                    } catch(err){
+                    }
+                  }
+                if (Filters[key] == "date"
+                  || Filters[key] == "datetime"
+                  || Filters[key] == "time"){
+                  try{
+                    if (key in features[0].properties){
+                      HTMLkey = key.replace(/[&\/\\#,+()$~%.'":*?<>{} ]/g, '');
+                      startdate = document.getElementById("dat_" +
+                        HTMLkey + "_date1").value.replace(" ", "T");
+                      enddate = document.getElementById("dat_" +
+                        HTMLkey + "_date2").value.replace(" ", "T");
+                      for (i = features.length - 1; i >= 0; --i){
+                        if (features[i].properties[key] < startdate
+                          || features[i].properties[key] > enddate){
+                          features.splice(i,1);
+                        }
+                      }
+                    }
+                  } catch(err){
+                  }
+                }
+              }
+            } catch(err){
+            }
+          this[lyr["options"]["layerName"]].clearLayers();
+          this[lyr["options"]["layerName"]].addData(features);
+          }
+          })
+        }
+            document.getElementById("menu").appendChild(
+                document.createElement("div"));
+            var div_PD_mWm2 = document.createElement("div");
+            div_PD_mWm2.id = "div_PD_mWm2";
+            div_PD_mWm2.className = "slider";
+            document.getElementById("menu").appendChild(div_PD_mWm2);
+            var lab_PD_mWm2 = document.createElement('div');
+            lab_PD_mWm2.innerHTML  = 'PD_mW/m2: <span id="val_PD_mWm2"></span>';
+            lab_PD_mWm2.className = 'filterlabel';
+            document.getElementById("menu").appendChild(lab_PD_mWm2);
+            var reset_PD_mWm2 = document.createElement('div');
+            reset_PD_mWm2.innerHTML = 'clear filter';
+            reset_PD_mWm2.className = 'filterlabel';
+            lab_PD_mWm2.className = 'filterlabel';
+            reset_PD_mWm2.onclick = function() {
+                sel_PD_mWm2.noUiSlider.reset();
+            };
+            document.getElementById("menu").appendChild(reset_PD_mWm2);
+            var sel_PD_mWm2 = document.getElementById('div_PD_mWm2');
+            noUiSlider.create(sel_PD_mWm2, {
+                connect: true,
+                start: [0.001, 384.904],
+                range: {
+                min: 0.001,
+                max: 384.904
+                }
+            });
+            sel_PD_mWm2.noUiSlider.on('update', function (values) {
+            val_PD_mWm2 = document.getElementById('val_PD_mWm2');
+            val_PD_mWm2.innerHTML = values.join(' - ');
+                filterFunc()
+            });
+            document.getElementById("menu").appendChild(
+                document.createElement("div"));
+            var div_Source = document.createElement('div');
+            div_Source.id = "div_Source";
+            div_Source.className= "filterselect";
+            document.getElementById("menu").appendChild(div_Source);
+            sel_Source = document.createElement('select');
+            sel_Source.multiple = true;
+            sel_Source.size = 8;
+            sel_Source.id = "sel_Source";
+            var Source_options_str = "<option value='' unselected></option>";
+            sel_Source.onchange = function(){filterFunc()};
+            Source_options_str  += '<option value="---">---</option>';
+            Source_options_str  += '<option value="AC EF">AC EF</option>';
+            Source_options_str  += '<option value="Cell Tower">Cell Tower</option>';
+            Source_options_str  += '<option value="Mixed">Mixed</option>';
+            Source_options_str  += '<option value="Power Line">Power Line</option>';
+            Source_options_str  += '<option value="Smart Meter">Smart Meter</option>';
+            Source_options_str  += '<option value="Static">Static</option>';
+            Source_options_str  += '<option value="WiFi/Phone">WiFi/Phone</option>';
+            sel_Source.innerHTML = Source_options_str;
+            div_Source.appendChild(sel_Source);
+            var lab_Source = document.createElement('div');
+            lab_Source.innerHTML = 'Source';
+            lab_Source.className = 'filterlabel';
+            div_Source.appendChild(lab_Source);
+            var reset_Source = document.createElement('div');
+            reset_Source.innerHTML = 'clear filter';
+            reset_Source.className = 'filterlabel';
+            reset_Source.onclick = function() {
+                var options = document.getElementById("sel_Source").options;
+                for (var i=0; i < options.length; i++) {
+                    options[i].selected = false;
+                }
+                filterFunc();
+            };
+            div_Source.appendChild(reset_Source);
+        </script>
+    </body>
+</html>
